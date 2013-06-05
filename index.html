@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Ptlib by Distrotech</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Ptlib</h1>
+          <h2></h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/Distrotech/ptlib/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/Distrotech/ptlib/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/Distrotech/ptlib" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <pre><code>        Portable Tools Libary
+        =====================
+</code></pre>
+
+<h2>
+<a name="contents" class="anchor" href="#contents"><span class="octicon octicon-link"></span></a>Contents</h2>
+
+<ol>
+<li> Introduction</li>
+<li> Apologies</li>
+<li> CVS Access</li>
+<li> Building PTLib</li>
+<li> Using PTLib</li>
+<li> IPv6 issues</li>
+<li> Platform Specific Issues</li>
+<li> Conclusion</li>
+<li> Licensing</li>
+</ol><h1></h1>
+
+<h2>
+<a name="1-introduction" class="anchor" href="#1-introduction"><span class="octicon octicon-link"></span></a>1. Introduction</h2>
+
+<p>PTLib (Portable Tools Library) is a moderately large class library that has it's
+genesis many years ago as PWLib (portable Windows Library), a method to product
+applications to run on both Microsoft Windows and Unix systems. It has also been
+ported to other systems such as Mac OSX, VxWorks and other embedded systems</p>
+
+<p>Since then the system has grown to include many classes that assist in writing
+complete multi-platform applications. Classes for I/O portability, multi-
+threading portability, aid in producing unix daemons and NT services portably
+and all sorts of internet protocols were added over the years. So it became a
+Portable Tools Library and was renamed to PTLib.</p>
+
+<p>All this over and above basic "container" classes such as arrays, linear lists,
+sorted lists (RB Tree) and dictionaries (hash tables) which were all created
+before STL was standardized. Future versions of PTLib will see many of these
+classes replaced or supplemented by STL.</p>
+
+<p>The library was used extensively for all our in-house products. Then we decided
+to support the Open H323 project by throwing in some of the code written for
+one of our products. Thus, required PTLib so it got thrown into the open source
+world as well.</p>
+
+<h1></h1>
+
+<h2>
+<a name="2-apologies-not" class="anchor" href="#2-apologies-not"><span class="octicon octicon-link"></span></a>2. Apologies (not)</h2>
+
+<p>As you start using the library, the inevitable question "why did they do it that
+way?" will come up. The more experienced out there will know that there are
+several reasons for the way things are:</p>
+
+<ul>
+<li>  Carefully considered design,</li>
+<li>  Workarounds for portability and compiler subtleties,</li>
+<li>  History, it may be too hard to change an early design decision,</li>
+<li>  Complete arbitrariness, the absence of any compelling reason.</li>
+</ul><p>So, when you ask the next question "why didn't you do it this way?" The answer
+will be one of the above. The last one being a synonym for "we didn't think of
+that!"</p>
+
+<p>The bottom line is, use the library as is or change it as you require. You can
+even send in suggestions for improvements (or merely changes) and we may (or may
+not) include them in the base line code. Just do not send us any mail starting
+with the words "Why did you..." as the answer is quite likely to be "Because!"</p>
+
+<h1></h1>
+
+<h2>
+<a name="3-svn-access" class="anchor" href="#3-svn-access"><span class="octicon octicon-link"></span></a>3. SVN Access</h2>
+
+<p>There is a public SVN archive available at svn.sourceforge.net. To extract, use a
+command line like the following:</p>
+
+<pre><code>cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/openh323 co module
+</code></pre>
+
+<p>where "module" is one of the module names specified above.</p>
+
+<p>If you would like see the structure of the CVS, then use the View CVS tool at:</p>
+
+<pre><code>http://cvs.sourceforge.net/viewcvs.py/openh323/
+</code></pre>
+
+<h1></h1>
+
+<h2>
+<a name="4-building-ptlib" class="anchor" href="#4-building-ptlib"><span class="octicon octicon-link"></span></a>4. Building PTLib</h2>
+
+<p>This library is multi-platform, however there are only two major build systems
+that are used. The Microsoft DevStudio environment for Windows and the GNU make
+system for all of the various unix systems.</p>
+
+<h2>
+<a name="special-note-for-msvc-6-users" class="anchor" href="#special-note-for-msvc-6-users"><span class="octicon octicon-link"></span></a>SPECIAL NOTE FOR MSVC 6 USERS:</h2>
+
+<p>If you are using MSVC 6 then please run the "msvc6_upgrade.bat" script in the 
+PTLib top directory before continuing. If you skip this step, you will not
+be able to compile PTLib on MSVC 6. If you change the build environment to bypass 
+this step, then DLL versions of PTLib will not function correctly. For more 
+information, please see:</p>
+
+<p><a href="http://www.voxgratia.org/docs/ptlib_windows.html#msvc_headers">http://www.voxgratia.org/docs/ptlib_windows.html#msvc_headers</a> </p>
+
+<p>Actually, better yet, UPGRADE YOUR COMPILER!!!!</p>
+
+<h2>
+<a name="41-for-windows" class="anchor" href="#41-for-windows"><span class="octicon octicon-link"></span></a>4.1. For Windows</h2>
+
+<p>Note that more complete instructions can be found at the following URL, but here 
+are the basics:</p>
+
+<pre><code>http://www.voxgratia.org/docs/ptlib_windows.html 
+</code></pre>
+
+<ol>
+<li><p>Note you will need the bison and flex tools to compile some parts of the
+system. You can get a copy from <a href="http://www.openh323.org/bin/flexbison.zip">http://www.openh323.org/bin/flexbison.zip</a>,
+follow the instructions included in that package and put the executables
+somewhere in your path.</p></li>
+<li>
+<p>Start DevStudio .NET 2003 or .NET 2005. MSVC v6 may work, but is no longer
+actively supported. If you have another compiler you are on your own! Add
+these directories to the Include Files path as follows:</p>
+
+<p>In VisualStudio v7/8, go into the Tools menu, Options item. In the Options
+dialog, open the Projects folder, VC++ Directories item. In the 'Show
+Directories for:' list, select 'Include files'.</p>
+
+<pre><code>C:\PTLib\Include
+</code></pre>
+
+<p>Add the following to the Lib Files path and the Executable Files path:</p>
+
+<pre><code>C:\PTLib\Lib
+</code></pre>
+
+<p>The Lib folder is created as parts of PTLib are built. Also add this
+directory to your PATH environment variable (so the MergeSym tool can 
+be found).</p>
+</li>
+<li><p>Open the ptlib.sln or ptlib_2005.sln file for DevStudio 2003 or 2005
+respectively.</p></li>
+<li>
+<p>Select Release mode and build MergeSym.</p>
+
+<p>The build should automatically create a file ptlib/include/ptbuildopts.h
+via the configure.exe program that should be in the ptlib directory. If
+you have any problems try running the program directly from a command
+line. Use ".\configure --help" to get information on options such as
+forcing a feature or library dependency.</p>
+
+<p>The above will search the entire hard disk(s) for software packages to
+configure. This may take some time, so a useful feature is to set the
+environment variable:</p>
+
+<p>PTLIB_CONFIGURE_OPTIONS = --no-search</p>
+
+<p>which will only search some "standard" locations. Not ethat you could
+also include arguments to set the paths of packages that are not in
+standard locations.</p>
+
+<p>Note there are additional notes in the "Platform Specific Issues" on how
+to compile the various libraries in a manner suitable for use by PTLib
+under Windows.</p>
+</li>
+<li><p>You can then build the entire solution for Release, Debug and No Trace
+versions as you require.</p></li>
+<li><p>That's it, now you're on your own!</p></li>
+</ol><p>These are the project relationships:</p>
+
+<p>project             dependencies                             output</p>
+
+<hr><p>Console             (none)                                   ptlibs.lib
+MergeSym            ptlibs.lib                               mergesym.exe
+PTLib               ptlibs.lib, mergesym.exe                 ptlib.dll &amp; lib
+XMLRPC              ptlibs.lib, ptclib.lib                   xmlrpc.exe</p>
+
+<p>Debug versions append 'd' to filename, ie: ptlibsd.lib.</p>
+
+<p>MSDevWizard will not build in VisualStudio v7 and so is not included as a project.</p>
+
+<hr><h2>
+<a name="42-for-unix" class="anchor" href="#42-for-unix"><span class="octicon octicon-link"></span></a>4.2. For unix.</h2>
+
+<ol>
+<li>
+<p>If you have not put ptlib it into your home directory (~/ptlib) then
+you will have to define the environment variable PTLIBDIR to point to
+the correct directory.</p>
+
+<pre><code>Also make sure you have added the PTLib lib directory (e.g.
+$PTLIBDIR/lib_linux_x86) to your LD_LIBRARY_PATH environment variable
+if you intend to use shared libraries (the default).
+</code></pre>
+</li>
+<li>
+<p>Build the debug and release versions of the PTLib library as follows:
+    cd ~/ptlib
+    ./configure
+    make
+This may take some time. Note, you will need bison and flex for this to
+compile, most unix systems have these. WARNING: there is a bug in most 
+of the bison.simple files. See below for details.</p>
+
+<p>PTLib requires GNU Make. If GNU Make (gmake) is not your default make
+program (eg FreeBSD users), you will need to install GNU Make first
+and then use
+    cd ~/ptlib
+    ./configure
+    gmake</p>
+
+<p>If you are getting huge numbers of errors during the compile, then it 
+    is likely your platform is not supported, or you have incorrectly set 
+    the OSTYPE and MACHTYPE variables.</p>
+</li>
+<li><p>That's all there is to it, you are now on your own!</p></li>
+</ol><p>Bison problem under Unix</p>
+
+<p>The bison.simple file on many releases will not compile with the options used 
+by the PTLib getdate.y grammar. The options are required to make the date 
+parser thread safe so it is necessary to edit the bison.simple file to fix the 
+problem.</p>
+
+<p>The file is usually at /usr/lib/bison.simple but in the tradition of unix 
+could actually be anywhere. We leave it up to you to find it.</p>
+
+<p>The code:</p>
+
+<pre><code>/* Prevent warning if -Wstrict-prototypes. */
+#ifdef __GNUC__
+int yyparse (void);
+#endif
+</code></pre>
+
+<p>should be changed to</p>
+
+<pre><code>/* Prevent warning if -Wstrict-prototypes. */
+#ifdef __GNUC__
+#ifndef YYPARSE_PARAM
+int yyparse (void);
+#endif
+#endif
+</code></pre>
+
+<p>To prevent the incorrect function prototype from being defined. The getdate.y 
+should then produce a getdate.tab.c file that will actually compile.</p>
+
+<h1></h1>
+
+<h2>
+<a name="5-using-ptlib" class="anchor" href="#5-using-ptlib"><span class="octicon octicon-link"></span></a>5. Using PTLib</h2>
+
+<p>What documentation there is consists of this document and all of the header
+files. It was intended that a post processer go through the header files and
+produces HTML help files, but this never got completed.</p>
+
+<h2>
+<a name="51-tutorial" class="anchor" href="#51-tutorial"><span class="octicon octicon-link"></span></a>5.1. Tutorial</h2>
+
+<p>Detailed tutorials will almost certainly not be forthcoming. However, at least
+giving you an indication on how to start an application would be useful, so
+here is the infamous "Hello world!" program.</p>
+
+<p>// hello.cxx</p>
+
+<h1>
+<a name="include-" class="anchor" href="#include-"><span class="octicon octicon-link"></span></a>include </h1>
+
+<p>class Hello : public PProcess
+{
+  PCLASSINFO(Hello, PProcess)
+  public:
+    void Main();
+};</p>
+
+<p>PCREATE_PROCESS(Hello)</p>
+
+<p>void Hello::Main()
+{
+  cout &lt;&lt; "Hello world!\n";
+}</p>
+
+<p>// End of hello.cxx</p>
+
+<p>The CREATE_PROCESS macro actually defines the main() function and creates an
+instance of Hello. This assures that everything is initialised in the correct
+order. C++ does initialisation of global statics badly (and destruction is even
+worse), so try to put everything into your PProcess descedent rather than
+globals.</p>
+
+<p>A GUI application is very similar but is descended off PApplication rather than
+PProcess, and would create a window as a descendent off the PMainWindow class.</p>
+
+<p>The following is a simple Makefile for Unix platforms for the hello world 
+program.</p>
+
+<h1>
+<a name="simple-makefile-for-ptlib" class="anchor" href="#simple-makefile-for-ptlib"><span class="octicon octicon-link"></span></a>Simple makefile for PTLib</h1>
+
+<p>PROG    = hello
+SOURCES = hello.cxx</p>
+
+<p>ifndef PTLIBDIR
+PTLIBDIR=$(HOME)/ptlib
+endif</p>
+
+<p>include $(PTLIBDIR)/make/ptlib.mak</p>
+
+<h1>
+<a name="end-of-makefile" class="anchor" href="#end-of-makefile"><span class="octicon octicon-link"></span></a>End of Makefile</h1>
+
+<hr><h2>
+<a name="52-ptlib-classes" class="anchor" href="#52-ptlib-classes"><span class="octicon octicon-link"></span></a>5.2. PTlib Classes</h2>
+
+<p>The classes in PTLib fall into the following broad categories</p>
+
+<pre><code>Containers
+I/O
+Threads &amp; Processes
+</code></pre>
+
+<p>5.2.1. Containers</p>
+
+<p>While there are a number of container classes you wourld rarely actually descend
+off them, you would use macros that declare type safe descendents. These are
+simply templates instantiations when using a compiler that supports templates
+in a simple manner (GNU C++ does not qualify in our opinion).</p>
+
+<p>5.2.2. I/O</p>
+
+<p>There are many classes descendend from a basic primitive call a PChannel, which
+represents an entity for doing I/O. There are classes for files, serial ports,
+various types of socket and pipes to sub-processes.</p>
+
+<p>5.2.3. Threads &amp; Processes</p>
+
+<p>These classes support lightweight threading and functionality to do with the
+process as a whole (for example argument parsing). The threading will be
+pre-emptive on platforms that support it (Win32, platforms with pthreads eg
+Linux and FreeBSD) and cooperative on those that don't.</p>
+
+<h1></h1>
+
+<h2>
+<a name="6-ipv6-support-in-ptlib" class="anchor" href="#6-ipv6-support-in-ptlib"><span class="octicon octicon-link"></span></a>6. IPv6 support in ptlib</h2>
+
+<p>The IPv6 support in PTlib is supported and can be enabled or disabled via
+the configure program.</p>
+
+<p>When compiled with the IPv6 support, applications using only IPv4 are still 
+fully backward compatible. PTLib is able to manage simultaneously IPv4 and
+IPv6 connections.</p>
+
+<hr><h2>
+<a name="61-windows-platforms" class="anchor" href="#61-windows-platforms"><span class="octicon octicon-link"></span></a>6.1. Windows platforms</h2>
+
+<p>According to microsoft, IPv6 is not supported under 9x, experimental on Win2000, 
+supported on XP.
+You must use a compiler with IPv6 aware includes and libraries:</p>
+
+<ul>
+<li>VC6 must be patched to support RFC 2553 structure. (See 7.1 and 7.2 for patch)</li>
+<li>.Net should be ok (to be confirmed)
+The port as been performed with VC6 patched on a win2000 platform.</li>
+</ul><p>For more informations about IPv6 support:
+  Microsoft IPv6 support: 
+    <a href="http://research.microsoft.com/msripv6/">http://research.microsoft.com/msripv6/</a>
+  IPv6 for win2000: 
+    <a href="http://msdn.microsoft.com/downloads/sdks/platform/tpipv6.asp">http://msdn.microsoft.com/downloads/sdks/platform/tpipv6.asp</a>
+  IPv6 for XP: 
+    <a href="http://www.microsoft.com/windowsxp/pro/techinfo/administration/ipv6/default.asp">http://www.microsoft.com/windowsxp/pro/techinfo/administration/ipv6/default.asp</a></p>
+
+<h2>
+<a name="611-windows-platforms-win2000" class="anchor" href="#611-windows-platforms-win2000"><span class="octicon octicon-link"></span></a>6.1.1. Windows platforms: Win2000</h2>
+
+<p>Go to Microsoft win2000 IPv6 tech preview web page.
+<a href="http://msdn.microsoft.com/downloads/sdks/platform/tpipv6.asp">http://msdn.microsoft.com/downloads/sdks/platform/tpipv6.asp</a>
+Download the 'tpipv6-001205.exe' file and read carrefully the faq.
+<a href="http://msdn.microsoft.com/downloads/sdks/platform/tpipv6/faq.asp">http://msdn.microsoft.com/downloads/sdks/platform/tpipv6/faq.asp</a></p>
+
+<p>This program is designed for win2000 English Service pack 1.
+To install it on newer Service pack, you have to modify some files.
+Again, read the Faq.</p>
+
+<p>This install the IPv6 driver and the IPv6 includes.</p>
+
+<h2>
+<a name="612-windows-platforms-xp" class="anchor" href="#612-windows-platforms-xp"><span class="octicon octicon-link"></span></a>6.1.2. Windows platforms: XP</h2>
+
+<p>Read the IPv6 faq for windows XP
+<a href="http://www.microsoft.com/windowsxp/pro/techinfo/administration/ipv6/default.asp">http://www.microsoft.com/windowsxp/pro/techinfo/administration/ipv6/default.asp</a></p>
+
+<p>The 'ipv6 install' command installs only the IPv6 drivers.
+You need to install additionnals IPv6 includes for VC6.
+.NET should be ready. (to be confirmed ....)</p>
+
+<h2>
+<a name="613-compiling" class="anchor" href="#613-compiling"><span class="octicon octicon-link"></span></a>6.1.3. Compiling</h2>
+
+<p>To compile ptlib and openh323 with the IPv6 support you have to set an 
+environment variable:
+IPV6FLAG=1
+Set it using: [Start]/[Configuration pannel]/[System]/[Environment]</p>
+
+<p>Add the IPv6 SDK include path in your Visual C++ 6 environment:
+[Tools]/[Options]/[Directories]/[Include files]</p>
+
+<hr><h2>
+<a name="62-linux-platforms" class="anchor" href="#62-linux-platforms"><span class="octicon octicon-link"></span></a>6.2. Linux platforms</h2>
+
+<p>Recent Linux distributions support IPv6.
+2.4 kernels are IPv6 aware.</p>
+
+<p>Linux IPv6 Faq:
+<a href="http://www.tldp.org/HOWTO/Linux+IPv6-HOWTO/">http://www.tldp.org/HOWTO/Linux+IPv6-HOWTO/</a></p>
+
+<h2>
+<a name="621-enabling-ipv6-support" class="anchor" href="#621-enabling-ipv6-support"><span class="octicon octicon-link"></span></a>6.2.1. Enabling IPv6 support</h2>
+
+<p>IPv6 can be compiled statically in the kernel or compiled as a module.
+To load the IPv6 module, as 'root'</p>
+
+<h1>
+<a name="modprobe-ipv6" class="anchor" href="#modprobe-ipv6"><span class="octicon octicon-link"></span></a>modprobe ipv6</h1>
+
+<h2>
+<a name="622-compiling" class="anchor" href="#622-compiling"><span class="octicon octicon-link"></span></a>6.2.2. Compiling</h2>
+
+<p>Check that IPv6 is really on</p>
+
+<h1>
+<a name="ls-procnetif_inet6" class="anchor" href="#ls-procnetif_inet6"><span class="octicon octicon-link"></span></a>ls /proc/net/if_inet6</h1>
+
+<p>If this file exists, then IPv6 support is compiled in ptlib and openh323.</p>
+
+<hr><h2>
+<a name="63-testing" class="anchor" href="#63-testing"><span class="octicon octicon-link"></span></a>6.3. Testing</h2>
+
+<p>The test application sources can be found in the directory: openh323/samples/simple
+Once compiled the binaries are in simple/debug, release, obj_linux_x86_d, or
+obj_linux_x86_r.
+Under windows, the test application is simple.exe
+Under linux, the test application is simh323
+IPv6 support can be tested on only one machine. Just open two shell/command windows.</p>
+
+<h2>
+<a name="631-ipv6-address-and-port-notation" class="anchor" href="#631-ipv6-address-and-port-notation"><span class="octicon octicon-link"></span></a>6.3.1. IPv6 Address and port notation</h2>
+
+<p>IPv4 address and port are written in dot notation: xx.xx.xx.xx:4000
+IPv6 global address are written in semi-colon notation: [xx:xx:xx:xx::xx]:4000
+IPv6 scoped address ad a field for the scope: [xx:xx:xx:xx::xx%scope]:4000</p>
+
+<p>Exemples:
+Global address</p>
+
+<p>Scoped address</p>
+
+<p>Scoped address are not supported yet.</p>
+
+<h2>
+<a name="632-tests-configuration" class="anchor" href="#632-tests-configuration"><span class="octicon octicon-link"></span></a>6.3.2. Tests configuration</h2>
+
+<p>Tests 1,2,3 run on a single dual stack machine.
+  IPv4 Address: 127.0.0.1, 10.0.0.6
+  IPv6 Address: ::1, 3ffe:0b80:0002:f9c1:0000:0000:500b:0ea5</p>
+
+<p>Tests 4,5,6 run on two dual stack machine.
+PC1
+  IPv4 Address: 10.0.0.6
+  IPv6 Address: ::1, 3ffe:0b80:0002:f9c1:0000:0000:500b:0ea5
+PC2
+  IPv4 Address: 10.0.0.8
+  IPv6 Address: ::1, 3ffe:0b80:0002:f9c1:0000:0000:500b:0eb6</p>
+
+<h2>
+<a name="633-test-1-ipv4----ipv4-local-call" class="anchor" href="#633-test-1-ipv4----ipv4-local-call"><span class="octicon octicon-link"></span></a>6.3.3. Test 1: IPv4 &lt;--&gt; IPv4 local call</h2>
+
+<p>This test checks the backward compatibility with IPv4</p>
+
+<p>In first shell/command window, listen on 127.0.0.1, wait for a call.
+simple.exe -tttt -n -i 127.0.0.1 -l -a
+In second shell/command window, listen on 10.0.0.6, call 127.0.0.1
+simple.exe -tttt -n -i  10.0.0.6 -n 127.0.0.1</p>
+
+<h2>
+<a name="634-test-2-ipv6----ipv6-local-call-" class="anchor" href="#634-test-2-ipv6----ipv6-local-call-"><span class="octicon octicon-link"></span></a>6.3.4. Test 2: IPv6 &lt;--&gt; IPv6 local call </h2>
+
+<p>This test checks the IPv6 support</p>
+
+<p>In first shell/command window, listen on ::1, wait for a call.
+simple.exe -tttt -n -i ::1 -l -a
+In second shell/command window, listen on IPv6 address, call ::1
+simple.exe -tttt -n -i 3ffe:0b80:0002:f9c1:0000:0000:500b:0ea5 -n [::1]</p>
+
+<h2>
+<a name="635-test-3-ipv4----ipv6-local-call" class="anchor" href="#635-test-3-ipv4----ipv6-local-call"><span class="octicon octicon-link"></span></a>6.3.5. Test 3: IPv4 &lt;--&gt; IPv6 local call</h2>
+
+<p>This test checks that simultaneous IPv4 and IPv6 calls are supported.</p>
+
+<p>In first shell/command window, listen on 127.0.0.1, wait for a call.
+simple.exe -tttt -n -i 127.0.0.1 -l -a
+In second shell/command window, listen on IPv6 address, call 127.0.0.1
+simple.exe -tttt -n -i 3ffe:0b80:0002:f9c1:0000:0000:500b:0ea5 -n 127.0.0.1</p>
+
+<h2>
+<a name="636-test-4-ipv4----ipv4-call-between-two-hosts" class="anchor" href="#636-test-4-ipv4----ipv4-call-between-two-hosts"><span class="octicon octicon-link"></span></a>6.3.6. Test 4: IPv4 &lt;--&gt; IPv4 call between two hosts</h2>
+
+<p>This test checks the backward compatibility with IPv4</p>
+
+<p>First host, listen on 10.0.0.6, wait for a call.
+simple.exe -tttt -n -i 127.0.0.1 -l -a
+Second host, listen on 10.0.0.8, call 10.0.0.6
+simple.exe -tttt -n -i  10.0.0.8 -n 10.0.0.6</p>
+
+<h2>
+<a name="637-test-5-ipv6----ipv6-call-between-two-hosts" class="anchor" href="#637-test-5-ipv6----ipv6-call-between-two-hosts"><span class="octicon octicon-link"></span></a>6.3.7. Test 5: IPv6 &lt;--&gt; IPv6 call between two hosts</h2>
+
+<p>This test checks the IPv6 support</p>
+
+<p>First host, listen on 3ffe:0b80:0002:f9c1:0000:0000:500b:0ea5, wait for a call.
+simple.exe -tttt -n -i 3ffe:0b80:0002:f9c1:0000:0000:500b:0ea5 -l -a
+Second host, listen on 3ffe:0b80:0002:f9c1:0000:0000:500b:0eb6, call 3ffe:0b80:0002:f9c1:0000:0000:500b:0ea5
+simple.exe -tttt -n -i 3ffe:0b80:0002:f9c1:0000:0000:500b:0eb6 -n <a href="4000">3ffe:0b80:0002:f9c1:0000:0000:500b:0ea5</a></p>
+
+<h2>
+<a name="638-test-6-ipv4----ipv6-call-between-two-hosts" class="anchor" href="#638-test-6-ipv4----ipv6-call-between-two-hosts"><span class="octicon octicon-link"></span></a>6.3.8. Test 6: IPv4 &lt;--&gt; IPv6 call between two hosts</h2>
+
+<p>This test checks that simultaneous IPv4 and IPv6 calls are supported.</p>
+
+<p>First host, listen on 10.0.0.6, wait for a call.
+simple.exe -tttt -n -i 10.0.0.6 -l -a
+Second host, listen on 3ffe:0b80:0002:f9c1:0000:0000:500b:0eb6, call 10.0.0.6
+simple.exe -tttt -n -i 3ffe:0b80:0002:f9c1:0000:0000:500b:0eb6 -n 10.0.0.6</p>
+
+<hr><h2>
+<a name="64-known-limitations" class="anchor" href="#64-known-limitations"><span class="octicon octicon-link"></span></a>6.4. Known limitations</h2>
+
+<p>You must use IPv6 address with global scope. Tests with IPv6 local link address
+fail.</p>
+
+<hr><h2>
+<a name="65-questions" class="anchor" href="#65-questions"><span class="octicon octicon-link"></span></a>6.5. Questions</h2>
+
+<h2>
+<a name="651-how-to-patch-my-vc6-includes-files-" class="anchor" href="#651-how-to-patch-my-vc6-includes-files-"><span class="octicon octicon-link"></span></a>6.5.1. How to patch my VC6 includes files ?</h2>
+
+<p>To patch you Developper studio Visual C++ version 6, just edit the file
+"C:\Program Files\Microsoft Visual Studio\VC98\Include\ws2tcpip.h", and add
+the sin6_scope_id field in the sockadd_in6 structure.
+struct sockaddr_in6 {
+          short     sin6_family;         /* AF_INET6 <em>/
+          u_short sin6_port;  /</em> Transport level port number <em>/
+          u_long    sin6_flowinfo; /</em> IPv6 flow information <em>/
+          struct in_addr6 sin6_addr; /</em> IPv6 address <em>/
+          u_long    sin6_scope_id; /</em> scope id (new in RFC2553) */ &lt;--- Add this one
+};</p>
+
+<p>This may have an impact on you system stability, use it only on
+experimental platforms. Using .NET compiler should be a better solution.</p>
+
+<h2>
+<a name="652-why-do-i-need-to-modify-my-visual-c6-include-files--" class="anchor" href="#652-why-do-i-need-to-modify-my-visual-c6-include-files--"><span class="octicon octicon-link"></span></a>6.5.2. Why do I need to modify my Visual C++6 include files ? </h2>
+
+<p>Visual Studio C++ version 6 implements the old RFC 2133 in file "ws2tcpip.h".
+RFC 2133 defines a 24 byte sockaddr_in6 structure.
+struct sockaddr_in6 {
+          short     sin6_family;         /* AF_INET6 <em>/
+          u_short sin6_port;  /</em> Transport level port number <em>/
+          u_long    sin6_flowinfo; /</em> IPv6 flow information <em>/
+          struct in_addr6 sin6_addr; /</em> IPv6 address */
+};</p>
+
+<p>This RFC as been replaced by RFC 2553.
+RFC 2133 defines a 28 byte addsock_in6 structure.
+struct sockaddr_in6 {
+          short     sin6_family;         /* AF_INET6 <em>/
+          u_short sin6_port;  /</em> Transport level port number <em>/
+          u_long    sin6_flowinfo; /</em> IPv6 flow information <em>/
+          struct in_addr6 sin6_addr; /</em> IPv6 address <em>/
+          u_long    sin6_scope_id; /</em> scope id (new in RFC2553) */
+};</p>
+
+<h2>
+<a name="653-how-to-get-an-ipv6-address-with-a-global-scope-" class="anchor" href="#653-how-to-get-an-ipv6-address-with-a-global-scope-"><span class="octicon octicon-link"></span></a>6.5.3. How to get an ipv6 address with a Global scope ?</h2>
+
+<h2>
+<a name="6531-manually" class="anchor" href="#6531-manually"><span class="octicon octicon-link"></span></a>6.5.3.1. Manually</h2>
+
+<p>Set one manually if you're not connected to IPv4 Internet or IPv6 backbone:</p>
+
+<h1>
+<a name="ip--6-addr-add-3ffe0b800002f9c100000000500b0ea5-dev-eth0" class="anchor" href="#ip--6-addr-add-3ffe0b800002f9c100000000500b0ea5-dev-eth0"><span class="octicon octicon-link"></span></a>ip -6 addr add 3ffe:0b80:0002:f9c1:0000:0000:500b:0ea5 dev eth0</h1>
+
+<p>(this address is owned by freenet6.net).</p>
+
+<p>Check the address is set.</p>
+
+<h1>
+<a name="ifconfig" class="anchor" href="#ifconfig"><span class="octicon octicon-link"></span></a>ifconfig</h1>
+
+<p>eth0      Lien encap:Ethernet  HWaddr 00:08:D5:10:C7:BB
+          inet adr:12.0.0.2  Bcast:12.255.255.255  Masque:255.0.0.0
+          adr inet6: 3ffe:b80:2:f9c1::500b:ea5/128 Scope:Global  &lt;- - - Ok, Global scope
+          adr inet6: fe80::208:c7ff:fe59:bbc7/10 Scope:Lien &lt;- - - [ Can't use this one ]
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:9 errors:0 dropped:0 overruns:9 carrier:0
+          collisions:0
+          RX bytes:0 (0.0 b)  TX bytes:534 (534.0 b)</p>
+
+<h2>
+<a name="6532-tunnel-broker" class="anchor" href="#6532-tunnel-broker"><span class="octicon octicon-link"></span></a>6.5.3.2. Tunnel broker</h2>
+
+<p>Get one from a free IPv6 tunnel broker.
+Exemple: 
+<a href="http://www.freenet6.net">http://www.freenet6.net</a> : Canadian tunnel broker
+<a href="http://tb.ngnet.it">http://tb.ngnet.it</a>      : Italian tunnel broker (Telecom Italia Research)</p>
+
+<p>Note: The current (10/2002) freenet6 windows binary is buggy, use it to get the 
+values, and set manually your tunnel.</p>
+
+<hr><h2>
+<a name="66-troubles" class="anchor" href="#66-troubles"><span class="octicon octicon-link"></span></a>6.6. Troubles</h2>
+
+<h2>
+<a name="661-listen-on-11720-failed-address-family-not-supported-by-protocol" class="anchor" href="#661-listen-on-11720-failed-address-family-not-supported-by-protocol"><span class="octicon octicon-link"></span></a>6.6.1. Listen on ::1:1720 failed: Address family not supported by protocol</h2>
+
+<p>IPv6 module is not loaded in the kernel.</p>
+
+<h1>
+<a name="modprobe-ipv6-1" class="anchor" href="#modprobe-ipv6-1"><span class="octicon octicon-link"></span></a>modprobe ipv6</h1>
+
+<h2>
+<a name="662-simpleh323---tcp-could-not-open-h323-listener-port-on-1720" class="anchor" href="#662-simpleh323---tcp-could-not-open-h323-listener-port-on-1720"><span class="octicon octicon-link"></span></a>6.6.2. SimpleH323   TCP Could not open H.323 listener port on 1720</h2>
+
+<p>Add some traces: -t on the command line. </p>
+
+<h2>
+<a name="663-simpleh323---tcp-listen-on-fe802b0d0fffedfd6bf1720-failed-invalid-argument" class="anchor" href="#663-simpleh323---tcp-listen-on-fe802b0d0fffedfd6bf1720-failed-invalid-argument"><span class="octicon octicon-link"></span></a>6.6.3. SimpleH323   TCP Listen on fe80::2b0:d0ff:fedf:d6bf:1720 failed: Invalid argument</h2>
+
+<p>This address is a local scope address. As the scope_id field is always set to 0,
+its value is invalid.</p>
+
+<p>Use address with global scope.</p>
+
+<h1></h1>
+
+<h2>
+<a name="7-platform-specific-issues" class="anchor" href="#7-platform-specific-issues"><span class="octicon octicon-link"></span></a>7. Platform Specific Issues</h2>
+
+<p>PTLib has been ported to several platforms. However on some systems not all of
+the functionality has been implemented. This could be due to lack of support
+at the OS level or simply due to lack of time or documentation when developing
+the port.</p>
+
+<hr><h2>
+<a name="71-freebsd-issues" class="anchor" href="#71-freebsd-issues"><span class="octicon octicon-link"></span></a>7.1. FreeBSD Issues</h2>
+
+<p>Port Maintained by Roger Hardiman <a href="mailto:roger@freebsd.org">roger@freebsd.org</a>
+GetRouteTable() in socket.cxx has been added. It is used by
+OenH323Proxy, but is not fully tested.</p>
+
+<hr><h2>
+<a name="72-openbsd-issues" class="anchor" href="#72-openbsd-issues"><span class="octicon octicon-link"></span></a>7.2. OpenBSD Issues</h2>
+
+<p>Port Maintained by Roger Hardiman <a href="mailto:roger@freebsd.org">roger@freebsd.org</a>
+GetRouteTable() in socket.cxx has been added. It is used by
+OenH323Proxy, but is not fully tested.</p>
+
+<hr><h2>
+<a name="73-netbsd-issues" class="anchor" href="#73-netbsd-issues"><span class="octicon octicon-link"></span></a>7.3. NetBSD Issues</h2>
+
+<p>Port Maintained by Roger Hardiman <a href="mailto:roger@freebsd.org">roger@freebsd.org</a>
+GetRouteTable() in socket.cxx has been added. It is used by
+OenH323Proxy, but is not fully tested.</p>
+
+<p>There are now three ways to do pthreads in NetBSD.
+a) unproven threads - from the packages tree.
+b) GNU pth threads - from the packages tree.
+c) Native pthreads - added to the kernel on 15th January 2003.</p>
+
+<p>The choice can be made by editing ptlib/make/unix.mak
+Native threads is the default and the best solution.</p>
+
+<hr><h2>
+<a name="74-mac-os-x-darwin-issues" class="anchor" href="#74-mac-os-x-darwin-issues"><span class="octicon octicon-link"></span></a>7.4. Mac OS X (Darwin) Issues</h2>
+
+<p>Port maintained by Roger Hardiman <a href="mailto:roger@freebsd.org">roger@freebsd.org</a> but recently
+Shawn Pai-Hsiang Hsiao <a href="mailto:shawn@eecs.harvard.edu">shawn@eecs.harvard.edu</a> has been leading
+development.
+Threads cannot be suspended once they are running, and trying to Suspend
+a running thread will generate an Assertion Error.
+Theads can be created in 'suspended' mode and then started with Resume
+This is due to a lack of pthread_kill() in Dawrin 1.2
+See <a href="http://www.publicsource.apple.com/bugs/X/Libraries/2686231.html">http://www.publicsource.apple.com/bugs/X/Libraries/2686231.html</a></p>
+
+<p>GetRouteTable() in socket.cxx has been added. It is used by
+OenH323Proxy, but is not fully tested.</p>
+
+<p>localtime_r() and gm_time() are missing.
+So in osutil.cxx I have implemented os_localtime() and os_gmtime()
+with localtime() and gm_time() which may not be thread safe.</p>
+
+<p>There is also no implementation for dynamic library functions.</p>
+
+<p>Audio is supported using the coreaudio library.</p>
+
+<p>Video support is being added by Shawn and users interested in this should
+check Shawn's web site at <a href="http://sourceforge.net/projects/xmeeting/">http://sourceforge.net/projects/xmeeting/</a></p>
+
+<hr><h2>
+<a name="75-beos-issues" class="anchor" href="#75-beos-issues"><span class="octicon octicon-link"></span></a>7.5. BeOS Issues</h2>
+
+<p>Port Maintained by Yuri Kiryanov <a href="mailto:openh323@kiryanov.com">openh323@kiryanov.com</a>. 
+Current version supported is BeOS 5.0.2. </p>
+
+<p>Most important issue is lack of variable sample frequency from system sound producer node.
+I made quite a few attempts to implement sound resampler in code, 
+even with help of Be engineers, but eventually decided to wait until new Media Kit
+with resampler built-in. 
+Also network code needed more things, as OOB, which was promised in BONE. 
+BONE will allow to make less #defines in network code as well.
+As update will hit the Net, I'll get back to it ASAP.  </p>
+
+<p>Look for more port-related info on <a href="http://www.dogsbone.com/be">http://www.dogsbone.com/be</a></p>
+
+<hr><h2>
+<a name="76-windows-ce-issues" class="anchor" href="#76-windows-ce-issues"><span class="octicon octicon-link"></span></a>7.6. Windows CE Issues</h2>
+
+<p>There is a very old port that was maintained by Yuri Kiryanov <a href="mailto:openh323@kiryanov.com">openh323@kiryanov.com</a>. 
+for 2.x and 3.x (PocketPC). But this is no longer supported. You are on your own.
+Look for more port-related info on <a href="http://www.pocketbone.com">http://www.pocketbone.com</a></p>
+
+<p>For Windows Mobile 5 and Windows Mobile 6 these are supoported via DevStudio 2005,
+just follow the normal isntractions for Windows builds.</p>
+
+<hr><h2>
+<a name="77-solaris-issues" class="anchor" href="#77-solaris-issues"><span class="octicon octicon-link"></span></a>7.7. Solaris Issues</h2>
+
+<p>On Solaris 8, you need to install GNU Ld (the loader) to get
+shared libraries to compile. (otherwise there is an error with -soname)
+You can get around this by using the static libraries and
+compiling with make optnoshared and make debugnoshared</p>
+
+<p>There is currently no implementation of GetRouteTable() in socket.cxx
+so OpenH323Proxy will not work.</p>
+
+<hr><h2>
+<a name="78-build-libraries-under-windows" class="anchor" href="#78-build-libraries-under-windows"><span class="octicon octicon-link"></span></a>7.8. Build libraries under Windows</h2>
+
+<p>Unfortunately building libraries that were intended for Unix based systems
+under Windows can sometimes be difficult. Here are some notes on the subsystems
+that PTLib uses.</p>
+
+<h2>
+<a name="781-openssl-under-windows" class="anchor" href="#781-openssl-under-windows"><span class="octicon octicon-link"></span></a>7.8.1. OpenSSL under Windows</h2>
+
+<p>The standard build for OpenSSL off <a href="http://www.openssl.org">http://www.openssl.org</a> does work though it
+is rather tricky and requires things like Perl to be installed on your
+Windows box. However the build does work and is correct for PTlib use. Make
+sure you build the non-DLL Debug and Release versions.</p>
+
+<h2>
+<a name="782-expat-under-windows" class="anchor" href="#782-expat-under-windows"><span class="octicon octicon-link"></span></a>7.8.2. EXPAT under Windows</h2>
+
+<p>The easiest way is to get the one in the OpenH323 CVS. This is guranteed to
+work. Use the following command to do this:</p>
+
+<p>cvs -d :pserver:<a href="mailto:anonymous@cvs.sourceforge.net">anonymous@cvs.sourceforge.net</a>:/cvsroot/openh323 co external/expat</p>
+
+<p>and then use the expat.dsw file to build the Debug and Release libraries.</p>
+
+<h2>
+<a name="783-openldap-under-windows" class="anchor" href="#783-openldap-under-windows"><span class="octicon octicon-link"></span></a>7.8.3. OpenLDAP under Windows</h2>
+
+<p>To use OpenLDAP with PTLib you have to compile the OpenLDAP library as a DLL.
+Unfortunately, the standard distribution does not do this. So there is a file in
+PTLib called ptlib/tools/openldap-2.1.12-win32.zip which contains altered build
+files for that version of OpenLDAP. Note if you have a different version these
+files may not work.</p>
+
+<p>To build the DLL:</p>
+
+<p>1   Get OpenLDAP v 2.1.17 via tar file at
+         <a>ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/openldap-2.1.17.tgz</a>
+       or anonymous CVS using tag at
+         :pserver:<a href="mailto:anonymous@cvs.OpenLDAP.org">anonymous@cvs.OpenLDAP.org</a>:/repo/OpenLDAP
+       using tag OPENLDAP_REL_ENG_2_1_17
+   2   Unpack it somewhere, eg c:\work\openldap
+   3   Unzip the openldap-2.1.17-win32.zip file that directory
+   4   Open openldap/build/main.dsw
+   5   use Batch build to and select the "dll" project and build the "DLL Debug"
+       and "DLL Release" targets.
+   6   Put the resulting openldap/DLLRelease/openldap.dll and
+       openldap/DLLDebug/openldapd.dll files in your path.</p>
+
+<h2>
+<a name="784-sdl-under-windows" class="anchor" href="#784-sdl-under-windows"><span class="octicon octicon-link"></span></a>7.8.4 SDL under Windows</h2>
+
+<p>Version 1.2.5 has support for Windows and MSVC so you just need to download it
+from <a href="http://www.libsdl.org/">http://www.libsdl.org/</a> and follow the build instructions.</p>
+
+<h2>
+<a name="785-sasl-under-windows" class="anchor" href="#785-sasl-under-windows"><span class="octicon octicon-link"></span></a>7.8.5 SASL under Windows</h2>
+
+<p>The standard distribution of Cyrus SASL comes with makefiles for Windows and
+clear instructions on how to build the library. The current implementation
+in PTLib was tested with Cyrus SASL version 2.1.18. Tarballs can be downloaded
+from:</p>
+
+<pre><code>http://asg.web.cmu.edu/sasl/sasl-library.html
+</code></pre>
+
+<hr><h2>
+<a name="79-esd-esound" class="anchor" href="#79-esd-esound"><span class="octicon octicon-link"></span></a>7.9. ESD (Esound)</h2>
+
+<p>Most targets come with native sound support.
+However there is also support for the ESD (esound) daemon which provides
+full duplex audio via network sockets.
+To compile ptlib to use ESD, you need to set the ESDDIR environment variable
+to point to the directory you have installed ESD into.
+Then compile ptlib.</p>
+
+<h1></h1>
+
+<h2>
+<a name="8-conclusion" class="anchor" href="#8-conclusion"><span class="octicon octicon-link"></span></a>8. Conclusion</h2>
+
+<p>This package is far from a "product". There is very limited documentation and
+support will be on an ad-hoc basis, send us an e-mail and we will probably
+answer your question if it isn't too difficult.</p>
+
+<p>It is supplied mainly to support the open H323 project, but that shouldn't stop
+you from using it in whatever project you have in mind if you so desire. We like
+it and use it all the time, and we don't want to get into any religious wars of
+this class library over that one.</p>
+
+<h1></h1>
+
+<h2>
+<a name="9-licensing-----------------" class="anchor" href="#9-licensing-----------------"><span class="octicon octicon-link"></span></a>9. Licensing                 </h2>
+
+<p>The bulk of this library is licensed under the MPL (Mozilla Public License)
+version 1.0. In simple terms this license allows you to use the library for 
+any purpose, commercial or otherwise, provided the library is kept in tact
+as a separate entity and any changes made to the library are made publicly
+available under the same (MPL) license. It is important to realise that that 
+refers to changes to the library and not your application that is merely 
+linked to the library.</p>
+
+<p>Note that due to a restriction in the GPL, any application you write that 
+uses anything another than GPL, eg our library with MPL, is technically in
+breach of the GPL license. However, it should be noted that MPL does not
+care about the license of the final application, and as only the author of
+the GPL application is in breach of his own license and is unlikely to sue
+themselves for that breach, in practice there is no problem with a GPL 
+application using an MPL or any other commercial library.</p>
+
+<p>The random number generator is based on code originally by Bob Jenkins.</p>
+
+<p>Portions of this library are from the REGEX library and is under the
+following license:</p>
+
+<p>Copyright 1992, 1993, 1994, 1997 Henry Spencer.  All rights reserved.
+This software is not subject to any license of the American Telephone
+and Telegraph Company or of the Regents of the University of California.</p>
+
+<p>Permission is granted to anyone to use this software for any purpose on
+any computer system, and to alter it and redistribute it, subject
+to the following restrictions:</p>
+
+<ol>
+<li><p>The author is not responsible for the consequences of use of this
+software, no matter how awful, even if they arise from flaws in it.</p></li>
+<li><p>The origin of this software must not be misrepresented, either by
+explicit claim or by omission.  Since few users ever read sources,
+credits must appear in the documentation.</p></li>
+<li><p>Altered versions must be plainly marked as such, and must not be
+misrepresented as being the original software.  Since few users
+ever read sources, credits must appear in the documentation.</p></li>
+<li><p>This notice may not be removed or altered.</p></li>
+</ol><p>The in-band DTMF decoding code was taken from FreeBSD's dtmfdecode.c
+application written by Poul-Henning Kamp. It has the following
+license:</p>
+
+<ul>
+<li>----------------------------------------------------------------------------</li>
+<li>"THE BEER-WARE LICENSE" (Revision 42):</li>
+<li>
+<a href="mailto:phk@FreeBSD.org">phk@FreeBSD.org</a> wrote this file.  As long as you retain this notice you</li>
+<li>can do whatever you want with this stuff. If we meet some day, and you think</li>
+<li>this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp</li>
+<li>----------------------------------------------------------------------------</li>
+</ul><h1></h1>
+
+<p>Equivalence Pty. Ltd.
+Home of OpenH323 and the Open Phone Abstraction Library (OPAL)</p>
+
+<p><a href="mailto:support@equival.com.au">support@equival.com.au</a>
+<a href="http://www.equival.com.au">http://www.equival.com.au</a> (US Mirror - <a href="http://www.equival.com">http://www.equival.com</a>)</p>
+
+<h1></h1>
+        </section>
+
+        <footer>
+          Ptlib is maintained by <a href="https://github.com/Distrotech">Distrotech</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
